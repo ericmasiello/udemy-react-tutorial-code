@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import SearchBar from './components/search_bar';
+import VideoList from './components/video_list.js';
 import YTSearch from 'youtube-api-search';
 const API_KEY = 'AIzaSyCRyHI8QgOOhXpNGwjdkcmGyQJlZdJL0yA';
 
@@ -36,11 +37,11 @@ class App extends Component {
     return (
       <div>
         <SearchBar />
-        {this.props.message}
+        <VideoList videos={this.state.videos} />
       </div>
     );
   }
 }
 
 //Using <Tag /> syntax calls React.createElement(Tag) thus turning it into an instance
-ReactDOM.render(<App message='Whats up' />, document.querySelector('.container'));
+ReactDOM.render(<App />, document.querySelector('.container'));
