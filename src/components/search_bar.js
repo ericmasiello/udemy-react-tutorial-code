@@ -13,21 +13,25 @@ class SearchBar extends Component {
 
     //initialize state
     this.state = {
-      term: 'Initial value'
+      term: ''
     };
   }
 
   render(){
     return (
-      <div>
+      <div className='search-bar'>
         <input type='search'
                placeholder='Search me'
                value={this.state.term} // by doing this, we call this a 'controlled component' (input is controlled by state)
-               onChange={event => this.setState({ term: event.target.value })}
+               onChange={event => this.onInputChange(event.target.value)}
           />
-        Value of the input: {this.state.term}
       </div>
     );
+  }
+
+  onInputChange(term){
+    this.setState({term});
+    this.props.onSearchTermChange(term);
   }
 
   ///* React naming convention: on + ELEMENT + EVENT */
