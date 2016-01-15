@@ -1,15 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import SearchBar from './components/search_bar';
+import YTSearch from 'youtube-api-search';
+const API_KEY = 'AIzaSyCRyHI8QgOOhXpNGwjdkcmGyQJlZdJL0yA';
 
-import App from './components/app';
-import reducers from './reducers';
+//This is a class or factory, not an instance
+//This is considered a 'React functional component' (aka dumb component) because its created using a function
+//As opposed to as class component
+//const App = (props) => {
+//
+//  return (
+//    <div>
+//      <SearchBar />
+//      {props.message}
+//    </div>
+//  );
+//};
 
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+class App extends Component {
 
-ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
-    <App />
-  </Provider>
-  , document.querySelector('.container'));
+  constructor(props){
+    super(props);
+
+    this.state = {
+      videos: []
+    };
+
+    //fetch initial data
+    YTSearch({ key: API_KEY, term: 'surfboard'}, videos => {
+      this.setState({ videos });
+    });
+  }
+
+  render(){
+    return (
+      <div>
+        <SearchBar />
+        {this.props.message}
+      </div>
+    );
+  }
+}
+
+//Using <Tag /> syntax calls React.createElement(Tag) thus turning it into an instance
+ReactDOM.render(<App message='Whats up' />, document.querySelector('.container'));
