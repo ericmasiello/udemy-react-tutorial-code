@@ -1,62 +1,44 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import SearchBar from './components/search_bar';
-import VideoList from './components/video_list';
-import VideoDetail from './components/video_detail';
-import YTSearch from 'youtube-api-search';
-const API_KEY = 'AIzaSyCRyHI8QgOOhXpNGwjdkcmGyQJlZdJL0yA';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 
-//This is a class or factory, not an instance
-//This is considered a 'React functional component' (aka dumb component) because its created using a function
-//As opposed to as class component
-//const App = (props) => {
-//
-//  return (
-//    <div>
-//      <SearchBar />
-//      {props.message}
-//    </div>
-//  );
-//};
+import App from './components/app';
+import reducers from './reducers';
 
-class App extends Component {
+const createStoreWithMiddleware = applyMiddleware()(createStore);
 
-  constructor(props){
-    super(props);
+ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(reducers)}>
+    <App />
+  </Provider>
+  , document.querySelector('.container'));
 
-    this.state = {
-      videos: [],
-      selectedVideo: null
-    };
 
-    //fetch initial data
-    this.videoSearch('surfboards');
+/*
+
+Events in the application (e.g. user clicks something, page loads for the first time, etc)
+call Action Creators.
+
+Action Creators are simple functions that return Actions
+Actions are just objects that have a 'type' property e.g.
+  {
+    type: 'THE_ACTION_TO_PERFORM'
+  }
+Actions can also contain other metadata properties e.g.
+  {
+    type: 'BOOK_SELECTED',
+    book: {
+      id: 48,
+      title: 'Book title'
+    }
   }
 
-  videoSearch(term){
-    YTSearch({ key: API_KEY, term: term}, videos => {
-      this.setState({
-        videos: videos,
-        selectedVideo: videos[0] //initialize to the first video
-      });
-    });
-  }
+Actions are sent automatically to ALL reducers in the application
 
-  render(){
+Reducers can choose to return a different piece of state depending on the Action
+This newly returned state gets piped backed into our [Redux] applicaiton state which,
+in turn, gets piped back into our Container views causing them
+to re-render based on the newly updated redux app state
 
-    //makes it so this.videoSearch can be called only every 300 milliseconds
-    const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300);
-    return (
-      <div>
-        <SearchBar onSearchTermChange={videoSearch} />
-        <VideoDetail video={ this.state.selectedVideo }/>
-        <VideoList videos={this.state.videos}
-                   onVideoSelect={ selectedVideo => this.setState({selectedVideo}) }/>
-      </div>
-    );
-  }
-}
-
-//Using <Tag /> syntax calls React.createElement(Tag) thus turning it into an instance
-ReactDOM.render(<App />, document.querySelector('.container'));
+ */
